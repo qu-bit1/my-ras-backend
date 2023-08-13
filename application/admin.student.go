@@ -165,3 +165,18 @@ func deleteStudentByEventHandler(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Student deleted successfully"})
 }
+
+func deleteAllStudentsHandler(ctx *gin.Context) {
+	eid, err := util.ParseUint(ctx.Param("eid"))
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var students []EventStudent
+	err = deleteAllStudents(ctx, eid, &students)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+}

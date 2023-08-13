@@ -40,3 +40,8 @@ func deleteStudentByID(ctx *gin.Context, studentID uint) error {
 	tx := db.WithContext(ctx).Where("student_recruitment_cycle_id = ?", studentID).Delete(&EventStudent{})
 	return tx.Error
 }
+
+func deleteAllStudents(ctx *gin.Context, eventID uint, students *[]EventStudent) error {
+	tx := db.WithContext(ctx).Where("proforma_event_id = ?", eventID).Delete(students)
+	return tx.Error
+}
