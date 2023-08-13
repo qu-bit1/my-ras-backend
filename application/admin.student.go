@@ -2,6 +2,7 @@ package application
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spo-iitk/ras-backend/mail"
@@ -146,4 +147,21 @@ func postStudentsByEventHandler(mail_channel chan mail.Mail) gin.HandlerFunc {
 
 		ctx.JSON(http.StatusOK, gin.H{"success": "Students added successfully"})
 	}
+}
+
+func deleteStudentByEventHandler(ctx *gin.Context) {
+	studentIDStr := ctx.Param("sid")
+	studentID, err := strconv.ParseUint(studentIDStr, 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid student ID"})
+		return
+	}
+
+	err = deleteStudentByID(ctx, uint(studentID))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Student deleted successfully"})
 }
